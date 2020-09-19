@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Job</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .main {
+            margin: 0 auto;
+            width: 60%;
+            padding: 20px;
+        }
+
+        .forms {
+            background-color: #e6e4e4;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-8">
+                <p>Hello {{logged_user.first_name}}! These are the job details</p>
+            </div>
+            <div class="col-4">
+                <a href="/dashboard">Dashboard</a> |
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="main">
+        <h4>{{this_job.title}}</h4>
+        <ul>
+            <li>Description: {{this_job.desc}}</li>
+            <li>Location: {{this_job.location}}</li>
+            <li>Posted by: {{this_job.user.first_name}}</li>
+            <li>Posted on: {{this_job.created_at}}</li>
+        </ul>
+        <p>Categories: </p>
+        {% for category in this_job.jobs.all %}
+        <span>{{category.name}} /</span>
+        {% endfor %}
+        <p>
+        <form action="/addtomyjobs" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="job_id" value="{{this_job.id}}">
+            <button type="submit" class="btn btn-link">Add To My Jobs</button>
+        </form>
+        </p>
+    </div>
+</body>
+
+</html>

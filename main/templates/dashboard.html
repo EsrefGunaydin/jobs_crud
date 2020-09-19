@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .main {
+            margin: 0 auto;
+            width: 90%;
+            padding: 20px;
+        }
+        .forms {
+            background-color: #e6e4e4;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+   <div class="container mt-2">
+    <div class="row">
+        <div class="col-8">
+            <p>Hello {{logged_user.first_name}}!!</p>
+        </div>
+        <div class="col-4">
+            <a href="/logout">Logout</a> | 
+            <a href="/jobs/new">New Job!</a>
+        </div>
+    </div>
+    <hr>
+</div>
+<div class="container">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Job</td>
+                <th>Location</td>
+                <th>Actions</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in all_jobs%}
+            <tr>
+                <td>{{job.title}}</td>
+                <td>{{job.location}}</td>
+                <td> 
+                    <div class="row">
+                        <div class="col"><a href="/jobs/{{job.id}}">View</a></div>
+                    
+                        {% if logged_user.id == job.user.id %}
+                    <div class="col">
+                        <form action="/deletejob" method="POST">
+                            {% csrf_token %}
+                        <input type="hidden" name="job_id" value="{{job.id}}">
+                        <button type="submit" class="btn btn-link">Remove</button>
+                        </form> 
+                    </div>
+                     <div class="col">
+                        <a href="/jobs/edit/{{job.id}}">Edit</a>
+                     </div>
+                     {% endif %}
+                    <div class="col">
+                        <a href="/dashboard/{{job.id}}">Add</a></td>
+                    </div>
+                </div> 
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <table class="table">
+        <h4>{{logged_user.first_name}}'s jobs</h4>
+        <thead class="thead-dark">
+            <tr>
+                <th>Job</td>
+                <th>Location</td>
+                <th>Actions</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in logged_user_jobs %}
+            <tr>
+                <td>{{job.title}}</td>
+                <td>{{job.location}}</td>
+                <td> 
+                    <div class="row">
+                        <div class="col"><a href="/jobs/{{job.id}}">View</a></div>
+                    
+                    <div class="col">
+                        <form action="/deletejob" method="POST">
+                            {% csrf_token %}
+                        <input type="hidden" name="job_id" value="{{job.id}}">
+                        <button type="submit" class="btn btn-link">Done</button>
+                        </form> 
+                    </div>
+                    <div class="col">
+                        <a href="/dashboard">Give Up</a></td>
+                    </div>
+                </div> 
+            </tr>
+            {% endfor %}
+
+            {% for job in excluded_jobs %}
+            <tr>
+                <td>{{job.title}}</td>
+                <td>{{job.location}}</td>
+                <td><div class="row">
+                    <div class="col"><a href="/jobs/{{job.id}}">View</a></div>
+                
+                <div class="col">
+                    <form action="/deletejob" method="POST">
+                        {% csrf_token %}
+                    <input type="hidden" name="job_id" value="{{job.id}}">
+                    <button type="submit" class="btn btn-link">Done</button>
+                    </form> 
+                </div>
+                <div class="col">
+                    <a href="/dashboard">Give Up</a></td>
+                </div>
+            </div> </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
